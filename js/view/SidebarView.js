@@ -7,6 +7,7 @@ export class SidebarView extends View {
 
     init() {
         this.ctn.addClass('wec-sidebar');
+        this.selectedMenu = {};
     }
 
     async render() {

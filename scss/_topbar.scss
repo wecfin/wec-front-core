@@ -176,6 +176,11 @@ $pc-topbar-height: 56px;
         .wec-topbar-account {
             .avatar {
                 line-height: $pc-topbar-height;
+  
+                img {
+                  height: 36px;
+    	            width: 36px;
+	              }
             }
         }
     }
