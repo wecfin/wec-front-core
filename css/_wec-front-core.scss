@@ -1,0 +1,42 @@
+@import './sidebar';
+@import './topbar';
+
+
+.wec-company-layout,
+.wec-normal-layout {
+    height: 100%;
+    left: 0;
+    overflow: auto;
+    position: fixed;
+    top: 0;
+    width: 100%;
+
+    .main {
+        padding-top: 48px;
+    }
+}
+
+.wec-company-layout {
+
+    .main {
+        margin-left: 0;
+        transition: margin .3s;
+    }
+}
+
+@media screen and (min-width: 60rem) {
+    .wec-company-layout,
+    .wec-normal-layout {
+
+        .main {
+            padding: 72px 16px 16px;
+        }
+    }
+
+    .wec-company-layout {
+
+        .main {
+            margin-left: 200px;
+        }
+    }
+}
