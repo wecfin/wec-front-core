@@ -8,7 +8,6 @@ export class CompanyLayout extends View {
 
     init () {
         this.ctn.addClass('wec-company-layout');
-        oneElem('body').appendChild(this.ctn);
     }
 
     render() {
@@ -30,6 +29,7 @@ export class CompanyLayout extends View {
         const mainArea = this.ctn.oneElem('.main');
 
         mainArea.html(strs, ...items);
+        document.body.html`${this.ctn}`;
     }
 
     setBreadcrumb(opts = []) {

@@ -7,7 +7,6 @@ export class NormalLayout extends View {
 
     init () {
         this.ctn.addClass('wec-normal-layout');
-        oneElem('body').appendChild(this.ctn);
     }
 
     render() {
@@ -25,6 +24,7 @@ export class NormalLayout extends View {
         const mainArea = this.ctn.oneElem('.main');
 
         mainArea.html(strs, ...items);
+        document.body.html`${this.ctn}`;
     }
 
     setBreadcrumb(opts = []) {
