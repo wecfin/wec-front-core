@@ -1,6 +1,6 @@
 {
   "name": "wec-front-core",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "wec-front-layout",
   "repository": "https://github.com/wecfin/wec-front-core",
   "main": "index.js",
