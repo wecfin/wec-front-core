@@ -12,9 +12,8 @@ export class CompanyLayout extends View {
 
     render() {
         this.topbar = new TopbarView();
-        this.sidebar = new SidebarView({
-            trigger: this.topbar.getTrigger()
-        });
+        let opts = Object.assign(this.data, {trigger: this.topbar.getTrigger()});
+        this.sidebar = new SidebarView(opts);
 
         this.ctn.html`
             ${this.topbar}
@@ -29,14 +28,30 @@ export class CompanyLayout extends View {
         const mainArea = this.ctn.oneElem('.main');
 
         mainArea.html(strs, ...items);
-        document.body.html`${this.ctn}`;
+
+        let frontScope = document.body.oneElem('.front-scope');
+            if (!frontScope) {
+                frontScope = document.createElement('div');
+                frontScope.addClass('front-scope');
+                document.body.appendChild(frontScope);
+            }
+
+        frontScope.html`${this.ctn}`;
     }
 
     setBreadcrumb(opts = []) {
         this.topbar.setBreadcrumb(opts);
     }
 
-    selectMenu(conf = {}) {
-        this.sidebar.selectMenu(conf);
+    renderMenu(apps, handler) {
+        this.sidebar.renderMenu(apps, handler);
+    }
+
+    renderUserInfo(userInfo = {}) {
+        this.topbar.renderUserInfo(userInfo);
+    }
+
+    renderDropMenu(opts = []) {
+        this.topbar.renderDropMenu(opts);
     }
 }

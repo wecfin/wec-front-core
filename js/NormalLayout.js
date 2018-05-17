@@ -24,10 +24,26 @@ export class NormalLayout extends View {
         const mainArea = this.ctn.oneElem('.main');
 
         mainArea.html(strs, ...items);
-        document.body.html`${this.ctn}`;
+
+        let frontScope = document.body.oneElem('.front-scope');
+        if (!frontScope) {
+            frontScope = document.createElement('div');
+            frontScope.addClass('front-scope');
+            document.body.appendChild(frontScope);
+        }
+
+        frontScope.html`${this.ctn}`;
     }
 
     setBreadcrumb(opts = []) {
         this.topbar.setBreadcrumb(opts);
+    }
+
+    renderUserInfo(userInfo = {}) {
+        this.topbar.renderUserInfo(userInfo);
+    }
+
+    renderDropMenu(opts = []) {
+        this.topbar.renderDropMenu(opts);
     }
 }

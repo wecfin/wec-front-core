@@ -1,6 +1,5 @@
 import {View} from 'gap-front-view';
 import {isBelong} from '../lib/isBelong';
-import {fetchUserInfoReq} from '../req/fetchUserInfoReq';
 
 export class TopbarView extends View {
     static get tag() {return 'div';}
@@ -9,7 +8,7 @@ export class TopbarView extends View {
         this.ctn.addClass('wec-topbar');
     }
 
-    async render() {
+    render() {
         this.ctn.html`
             <div class="wec-topbar-wrapper">
                 <div class="wec-sidebar-trigger">
@@ -25,18 +24,14 @@ export class TopbarView extends View {
                         <img src="">
                         <span><i class="icon icon-down"></i></span>
                     </div>
-                    <ul class="wec-topbar-drop">
-                        <li class="drop-header">
-                            Singed in as <b><span class="drop-header-nick">nick</span></b>
-                        </li>
-                        <li class="drop-divider"></li>
-                        <li>
-                            <a>修改密码</a>
-                        </li>
-                        <li>
-                            <a>登出</a>
-                        </li>
-                    </ul>
+                    <div class="wec-topbar-drop">
+                        <div class="drop-header">
+                            Singed in as <b><span class="drop-header-nick">user</span></b>
+                        </div>
+                        <div class="drop-divider"></div>
+                        <ul class="drop-menu">
+                        </ul>
+                    </div>
                 </div>
             </div>
         `;
@@ -44,19 +39,22 @@ export class TopbarView extends View {
 
     startup() {
         this.regEvent();
-        this.renderAvatar();
     }
 
-    async renderAvatar() {
-        let userInfo;
-        try {
-            userInfo = await fetchUserInfoReq();
-        } catch (e) {
-            throw new Error (e);
-        }
-
+    renderUserInfo(userInfo) {
         this.ctn.oneElem('.avatar img').src = userInfo.avatar;
         this.ctn.oneElem('.drop-header-nick').textContent = userInfo.nick;
+    }
+
+    renderDropMenu(opts) {
+        const dropMenu = this.ctn.oneElem('.drop-menu');
+        dropMenu.html``;
+        opts.forEach(opt => {
+            let li = document.createElement('li');
+            li.innerHTML = `<a>${opt.title}</a>`;
+            li.oneElem('a').cb('click', opt.action);
+            dropMenu.appendChild(li);
+        })
     }
 
     regEvent() {
@@ -76,25 +74,23 @@ export class TopbarView extends View {
 
     setBreadcrumb(opts = []) {
         const breadcrumb = this.ctn.oneElem('.wec-breadcrumb');
+        breadcrumb.html``;
         if (!opts.length) return;
 
-        breadcrumb.html`
-            ${opts.map((item, index, arr) => `<span class="breadcrumb-item ${index==(arr.length-1)?"last-piece":''}">
-                            <a href="${item.href || 'javascript:;'}">${item.title}</a>
-                            <i class="icon">/</i>
-                        </span>
-                    `)}
-        `;
+        opts.forEach((item, index, arr) => {
+            let span = document.createElement('span');
+            span.addClass(`breadcrumb-item ${index==(arr.length-1)?"last-piece":''}`);
+            span.html`<a href="${item.href || 'javascript:;'}">${item.title}</a><i class="icon">/</i>`;
+            span.oneElem('a').on('click', () => item.action());
+            breadcrumb.appendChild(span);
+        })
     }
+
 
     getTrigger() {
         this._trigger = this._trigger || this.ctn.oneElem('.wec-sidebar-trigger');
         this._trigger.html`<i class="icon icon-menu"></i>`;
 
         return this._trigger;
-    }
-
-    singOut() {
-        //todo
     }
 }

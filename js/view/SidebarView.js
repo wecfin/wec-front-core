@@ -1,6 +1,5 @@
 import {View} from 'gap-front-view';
 import {isBelong} from '../lib/isBelong';
-import {fetchSidebarConfigReq} from '../req/fetchSidebarConfigReq';
 
 export class SidebarView extends View {
     static get tag() {return 'div';}
@@ -10,67 +9,69 @@ export class SidebarView extends View {
         this.selectedMenu = {};
     }
 
-    async render() {
+    render() {
         this.ctn.html`
             <div class="wec-sidebar-wrapper">
                 <ul class="wec-sidebar-menu"></ul>
-                <div class="wec-sidebar-tips">
-                    <a href="javascript:;">
-                        <i class="icon icon-setting"></i>
-                        setting
-                    </a>
-                    <a href="javascript:;">
-                        <i class="icon icon-service"></i>
-                        service
-                    </a>
-                </div>
             </div>
         `;
     }
 
     startup() {
         this.regEvent();
-        this.renderMenu();
     }
 
-    async renderMenu() {
-        let sidebarConf;
+    renderMenu(apps, handler) {
+        const menuContainer = this.ctn.oneElem('.wec-sidebar-menu');
+        menuContainer.html``;
+        for (let key in apps) {
+            let item = this.createMenuItem(apps[key], handler);
+            menuContainer.appendChild(item);
+        }
+    }
+
+    createMenuItem(app, handler) {
+        let appName = app.appName;
+        let isCurrentApp = this.data.currentAppCode == app.appCode;
+        let url = '//' + app.baseUrl + this.data.basePath;
+        let li = document.createElement('li');
+        li.addClass(`wec-menu-item ${appName == this.selectedMenu['app'] ? 'active menu-expanded' : ''}`);
+        li.html`
+            <a class="wec-menu-title" href=${isCurrentApp? 'javascript:;' : url}>
+                <i class="icon icon-${appName}"></i>
+                ${appName}
+            </a>
+            <ul class="wec-submenu"></ul>
+        `;
+        if (isCurrentApp) {
+            let submenuContainer = li.oneElem('ul');
+            this.createSubmenuItem(submenuContainer, handler);
+            li.on('click', e => li.toggleClass('menu-expanded'));
+        }
+
+        return li;
+    }
+
+    async createSubmenuItem(container, handler) {
+        container.html``;
         try {
-            sidebarConf = await fetchSidebarConfigReq();
+            let submenuObjs = await handler();
+            submenuObjs.forEach(obj => {
+                let li = document.createElement('li');
+                li.addClass('wec-submenu-item');
+                li.html`<a href="javascript:;">${obj.name}</a>`;
+
+                let anchor = li.oneElem('a');
+                anchor.on('click', e => {
+                    e.stopPropagation();
+                    this.data.router.redirect(obj.route);
+                })
+
+                container.appendChild(li);
+            })
         } catch (e) {
             throw new Error(e);
         }
-
-        let apps = sidebarConf.apps;
-        let products = sidebarConf.products;
-        this.ctn.oneElem('.wec-sidebar-menu').html`
-            ${apps.map(app => this.createMenuItem(app, products)).join('')}
-        `;
-
-        let menuItems = this.ctn.allElem('.wec-menu-item');
-        menuItems.forEach(item => {
-            item.on('click', () => item.toggleClass('menu-expanded'));
-        });
-    }
-
-    createMenuItem(app, products) {
-        return `
-            <li class="wec-menu-item ${app.name == this.selectedMenu['app'] ? 'active menu-expanded' : ''}">
-                <a class="wec-menu-title">
-                    <i class="icon ${app['overView']['icon']}"></i>
-                    ${app.name}
-                </a>
-                <ul class="wec-submenu">
-                ${app.products.map(product => `
-                        <li class="wec-submenu-item ${product == this.selectedMenu['product'] ? 'active' : 'no'}">
-                            <a href="${products[product]['link']}">
-                                ${product}
-                            </a>
-                        </li>
-                    `).join('')}
-                </ul>
-            </li>
-        `;
     }
 
     regEvent() {
