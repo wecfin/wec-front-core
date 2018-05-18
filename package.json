@@ -1,6 +1,6 @@
 {
   "name": "wec-front-core",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "wec-front-layout",
   "repository": "https://github.com/wecfin/wec-front-core",
   "main": "index.js",
@@ -8,5 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "1162882015@qq.com",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "gap-front-view": "^1.1.1",
+    "gap-front-web": "^1.2.2"
+  }
 }
