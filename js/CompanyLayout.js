@@ -11,7 +11,7 @@ export class CompanyLayout extends View {
     }
 
     render() {
-        this.topbar = new TopbarView();
+        this.topbar = new TopbarView(this.data);
         let opts = Object.assign(this.data, {trigger: this.topbar.getTrigger()});
         this.sidebar = new SidebarView(opts);
 
@@ -43,15 +43,18 @@ export class CompanyLayout extends View {
         this.topbar.setBreadcrumb(opts);
     }
 
-    renderMenu(apps, handler) {
-        this.sidebar.renderMenu(apps, handler);
-    }
-
     renderUserInfo(userInfo = {}) {
         this.topbar.renderUserInfo(userInfo);
     }
 
     renderDropMenu(opts = []) {
         this.topbar.renderDropMenu(opts);
+    }
+
+    renderMenu(apps, handler) {
+        this.sidebar.renderMenu(apps, handler);
+    }
+    selectSubmenu(item = '') {
+        this.sidebar.selectSubmenu(item);
     }
 }

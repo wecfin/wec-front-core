@@ -35,7 +35,7 @@ export class SidebarView extends View {
         let isCurrentApp = this.data.currentAppCode == app.appCode;
         let url = '//' + app.baseUrl + this.data.basePath;
         let li = document.createElement('li');
-        li.addClass(`wec-menu-item ${appName == this.selectedMenu['app'] ? 'active menu-expanded' : ''}`);
+        li.addClass(`wec-menu-item ${isCurrentApp ? 'active menu-expanded' : ''}`);
         li.html`
             <a class="wec-menu-title" href=${isCurrentApp? 'javascript:;' : url}>
                 <i class="icon icon-${appName}"></i>
@@ -58,12 +58,14 @@ export class SidebarView extends View {
             let submenuObjs = await handler();
             submenuObjs.forEach(obj => {
                 let li = document.createElement('li');
-                li.addClass('wec-submenu-item');
+                li.addClass(`wec-submenu-item submenu-${obj.name} ${(obj.name === this.selectedSubmenu) ? 'active' : ''}`);
                 li.html`<a href="javascript:;">${obj.name}</a>`;
 
                 let anchor = li.oneElem('a');
                 anchor.on('click', e => {
                     e.stopPropagation();
+                    this.deActive('.wec-submenu-item');
+                    anchor.parentElement.addClass('active');
                     this.data.router.redirect(obj.route);
                 })
 
@@ -72,6 +74,13 @@ export class SidebarView extends View {
         } catch (e) {
             throw new Error(e);
         }
+    }
+
+    deActive(selector) {
+        let eles = this.ctn.allElem(selector);
+        if (!eles) return;
+
+        eles.forEach(ele => ele.removeClass('active'));
     }
 
     regEvent() {
@@ -89,7 +98,14 @@ export class SidebarView extends View {
         });
     }
 
-    selectMenu(conf = {}) {
-        this.selectedMenu = conf;
+    selectSubmenu(item) {
+        let selected = this.ctn.oneElem(`.submenu-${item}`);
+        if (selected) {
+            this.deActive('.wec-submenu-item');
+            selected.addClass('active');
+            return;
+        }
+
+        this.selectedSubmenu = item;
     }
 }

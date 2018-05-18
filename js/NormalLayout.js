@@ -10,7 +10,7 @@ export class NormalLayout extends View {
     }
 
     render() {
-        this.topbar = new TopbarView();
+        this.topbar = new TopbarView(this.data);
 
         this.ctn.html`
             ${this.topbar}
