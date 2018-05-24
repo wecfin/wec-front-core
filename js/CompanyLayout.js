@@ -54,7 +54,12 @@ export class CompanyLayout extends View {
     renderMenu(apps, handler) {
         this.sidebar.renderMenu(apps, handler);
     }
+
     selectSubmenu(item = '') {
         this.sidebar.selectSubmenu(item);
+    }
+
+    setRouterParams(params = {}) {
+        this.sidebar.setRouterParams(params);
     }
 }

@@ -7,6 +7,7 @@ export class SidebarView extends View {
     init() {
         this.ctn.addClass('wec-sidebar');
         this.selectedMenu = {};
+        this.routerParams = {};
     }
 
     render() {
@@ -66,7 +67,7 @@ export class SidebarView extends View {
                     e.stopPropagation();
                     this.deActive('.wec-submenu-item');
                     anchor.parentElement.addClass('active');
-                    this.data.router.redirect(obj.route);
+                    this.data.router.redirect(obj.route, this.routerParams);
                 })
 
                 container.appendChild(li);
@@ -107,5 +108,9 @@ export class SidebarView extends View {
         }
 
         this.selectedSubmenu = item;
+    }
+
+    setRouterParams(params) {
+        this.routerParams = params;
     }
 }
