@@ -65,6 +65,9 @@ export class SidebarView extends View {
                 let anchor = li.oneElem('a');
                 anchor.on('click', e => {
                     e.stopPropagation();
+                    if (anchor.textContent == this.selectedSubmenu) {
+                      return;
+                    }
                     this.deActive('.wec-submenu-item');
                     anchor.parentElement.addClass('active');
                     this.data.router.redirect(obj.route, this.routerParams);
@@ -100,11 +103,14 @@ export class SidebarView extends View {
     }
 
     selectSubmenu(item) {
+        if (this.selectedSubmenu == item) {
+          return;
+        }
+
+        this.deActive('.wec-submenu-item');
         let selected = this.ctn.oneElem(`.submenu-${item}`);
         if (selected) {
-            this.deActive('.wec-submenu-item');
             selected.addClass('active');
-            return;
         }
 
         this.selectedSubmenu = item;
