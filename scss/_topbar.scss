@@ -34,6 +34,9 @@ $pc-topbar-height: 56px;
 
     .wec-topbar-logo {
         float: left;
+        left: calc(50% - 70px);
+        position: absolute;
+        top: 0;
 
         a {
             display: inline-block;
@@ -135,6 +138,9 @@ $pc-topbar-height: 56px;
         }
 
         .wec-topbar-logo {
+            position: relative;
+            left: auto;
+
             a {
                 line-height: $pc-topbar-height;
 
