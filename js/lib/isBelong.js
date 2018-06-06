@@ -1,5 +1,5 @@
 export const isBelong = (child, parent) => {
-    while (child.tagName && child.tagName.toUpperCase() != 'BODY') {
+    while (child && child.tagName && child.tagName.toUpperCase() != 'BODY') {
 
         if (child == parent){
             return true;
