@@ -1,25 +1,23 @@
-import {View} from 'gap-front-view';
 import {oneElem} from 'gap-front-web';
 import {TopbarView} from './view/TopbarView';
 import {SidebarView} from './view/SidebarView';
 
-export class CompanyLayout extends View {
-    static get tag() {return 'div';}
+export class CompanyLayout {
+    constructor(data = {}) {
+        this.data = data;
 
-    init () {
-        this.ctn.addClass('wec-company-layout');
-    }
-
-    render() {
         this.topbar = new TopbarView(this.data);
         let opts = Object.assign(this.data, {trigger: this.topbar.getTrigger()});
         this.sidebar = new SidebarView(opts);
 
+        this.ctn = document.createElement('div');
+        this.ctn.addClass('wec-company-layout');
+
         this.ctn.html`
-            ${this.topbar}
-            ${this.sidebar}
+            ${this.topbar.ctn}
+            ${this.sidebar.ctn}
             <div class="main">
-                main area
+            main area
             </div>
         `;
     }

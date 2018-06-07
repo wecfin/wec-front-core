@@ -10,7 +10,6 @@
   "author": "1162882015@qq.com",
   "license": "ISC",
   "dependencies": {
-    "gap-front-view": "^2.2.0",
     "gap-front-web": "^1.2.11"
   }
 }

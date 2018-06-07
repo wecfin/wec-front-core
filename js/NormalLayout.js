@@ -1,19 +1,16 @@
-import {View} from 'gap-front-view';
 import {oneElem} from 'gap-front-web';
 import {TopbarView} from './view/TopbarView';
 
-export class NormalLayout extends View {
-    static get tag() {return 'div';}
+export class NormalLayout {
+    constructor(data = {}) {
+        this.data = data;
 
-    init () {
-        this.ctn.addClass('wec-normal-layout');
-    }
-
-    render() {
         this.topbar = new TopbarView(this.data);
+        this.ctn = document.createElement('div');
+        this.ctn.addClass('wec-normal-layout');
 
         this.ctn.html`
-            ${this.topbar}
+            ${this.topbar.ctn}
             <div class="main">
                 main area
             </div>

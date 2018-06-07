@@ -1,24 +1,19 @@
-import {View} from 'gap-front-view';
 import {isBelong} from '../lib/isBelong';
 
-export class SidebarView extends View {
-    static get tag() {return 'div';}
-
-    init() {
-        this.ctn.addClass('wec-sidebar');
+export class SidebarView {
+    constructor(data) {
+        this.data = data;
         this.selectedMenu = {};
         this.routerParams = {};
-    }
 
-    render() {
+        this.ctn = document.createElement('div');
+        this.ctn.addClass('wec-sidebar');
+
         this.ctn.html`
             <div class="wec-sidebar-wrapper">
                 <ul class="wec-sidebar-menu"></ul>
             </div>
         `;
-    }
-
-    startup() {
         this.regEvent();
     }
 
@@ -67,7 +62,7 @@ export class SidebarView extends View {
                     e.stopPropagation();
                     this.deActive('.wec-submenu-item');
                     anchor.parentElement.addClass('active');
-                    this.data.router.redirect(obj.route, this.routerParams);
+                    this.data.router.navigate(obj.route, this.routerParams);
                 })
 
                 container.appendChild(li);
