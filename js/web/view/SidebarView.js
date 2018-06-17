@@ -29,7 +29,7 @@ export class SidebarView {
     createMenuItem(app, handler) {
         let appName = app.appName;
         let isCurrentApp = this.data.currentAppCode == app.appCode;
-        let url = '//' + app.baseUrl + this.data.basePath + '?idToken=' + this.data.idToken || '';
+        let url = '//' + app.baseUrl + this.data.basePath + '/c/' + this.routerParams.companyCode + '?idToken=' + this.data.idToken || '';
         let li = document.createElement('li');
         li.addClass(`wec-menu-item ${isCurrentApp ? 'active menu-expanded' : ''}`);
         li.html`
