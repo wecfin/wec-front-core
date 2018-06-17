@@ -11,5 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "gap-front-web": "^1.2.11"
+  },
+  "scripts": {
+    "test": "npm run jest && npm run eslint",
+    "jest": "jest",
+    "eslint": "eslint ."
   }
 }
