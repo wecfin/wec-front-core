@@ -88,14 +88,14 @@ $pc-topbar-height: 56px;
             top: 100%;
             width: 160px;
 
-            .drop-header {
+            .topbar-drop-header {
                 color: #666;
                 display: block;
                 font-size: 14px;
                 padding: 4px 16px;
             }
 
-            .drop-divider {
+            .topbar-drop-divider {
                 border-top: 1px solid #e9e9e9;
             }
 
@@ -182,7 +182,7 @@ $pc-topbar-height: 56px;
         .wec-topbar-account {
             .avatar {
                 line-height: $pc-topbar-height;
-  
+
                 img {
                   height: 36px;
     	            width: 36px;

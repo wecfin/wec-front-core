@@ -23,11 +23,11 @@ export class TopbarView {
                         <span><i class="icon icon-down"></i></span>
                     </div>
                     <div class="wec-topbar-drop">
-                        <div class="drop-header">
-                            Singed in as <b><span class="drop-header-nick">user</span></b>
+                        <div class="topbar-drop-header">
+                            Singed in as <b><span class="topbar-drop-header-nick">user</span></b>
                         </div>
-                        <div class="drop-divider"></div>
-                        <ul class="drop-menu">
+                        <div class="topbar-drop-divider"></div>
+                        <ul class="topbar-drop-menu">
                         </ul>
                     </div>
                 </div>
@@ -39,11 +39,11 @@ export class TopbarView {
 
     renderUserInfo(userInfo) {
         this.ctn.oneElem('.avatar img').src = userInfo.avatar;
-        this.ctn.oneElem('.drop-header-nick').textContent = userInfo.nick;
+        this.ctn.oneElem('.topbar-drop-header-nick').textContent = userInfo.nick;
     }
 
     renderDropMenu(opts) {
-        const dropMenu = this.ctn.oneElem('.drop-menu');
+        const dropMenu = this.ctn.oneElem('.topbar-drop-menu');
         dropMenu.html``;
         opts.forEach(opt => {
             let li = document.createElement('li');
@@ -77,7 +77,9 @@ export class TopbarView {
             let span = document.createElement('span');
             span.addClass(`breadcrumb-item ${index==(arr.length-1)?"last-piece":''}`);
             span.html`<a href="${item.href || 'javascript:;'}">${item.title}</a><i class="icon">/</i>`;
-            span.oneElem('a').on('click', () => item.action());
+            if (item.action) {
+                span.oneElem('a').on('click', () => item.action());
+            }
             breadcrumb.appendChild(span);
         })
     }
