@@ -1,5 +1,6 @@
 export class AppManager {
     constructor(setting, cache, apiRequest) {
+        this.mainAppCode = setting.mainAppCode;
         this.setting = setting;
         this.cache = cache;
         this.apiRequest = apiRequest;
@@ -21,18 +22,18 @@ export class AppManager {
             return cachedAppSetting;
         }
 
-        const openSetting = this.setting.open[appCode];
-        if (!openSetting) {
-            throw new Error('cannot find openSetting: ' + appCode);
+        const appSetting = this.setting.app[appCode];
+        if (!appSetting) {
+            throw new Error('cannot find appSetting: ' + appCode);
         }
 
-        const homeUrl = this.generateUrl(openSetting, 'home');
-        const appSetting = await this.apiRequest.postJson(homeUrl);
-        if (!appSetting) {
+        const homeUrl = this.generateUrl(appSetting, 'home');
+        const remoteAppSetting = await this.apiRequest.postJson(homeUrl);
+        if (!remoteAppSetting) {
             throw new Error('cannot find app: ' + appCode);
         }
-        await this.cache.set(cacheKey, appSetting);
-        return appSetting;
+        await this.cache.set(cacheKey, remoteAppSetting);
+        return remoteAppSetting;
     }
 
     generateUrl(appSetting, api) {

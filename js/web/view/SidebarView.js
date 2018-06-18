@@ -1,4 +1,4 @@
-import {isBelong} from '../lib/isBelong';
+import {isBelong} from './fun/isBelong';
 
 export class SidebarView {
     constructor(data) {
@@ -42,7 +42,7 @@ export class SidebarView {
         if (isCurrentApp) {
             let submenuContainer = li.oneElem('ul');
             this.createSubmenuItem(submenuContainer, handler);
-            li.on('click', e => li.toggleClass('menu-expanded'));
+            li.on('click', () => li.toggleClass('menu-expanded'));
         }
 
         return li;

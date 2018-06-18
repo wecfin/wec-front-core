@@ -1,5 +1,4 @@
-import {oneElem} from 'gap-front-web';
-import {TopbarView} from './view/TopbarView';
+import {TopbarView} from './TopbarView';
 
 export class NormalLayout {
     constructor(data = {}) {

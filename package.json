@@ -4,12 +4,10 @@
   "description": "wec-front-layout",
   "repository": "https://github.com/wecfin/wec-front-core",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "1162882015@qq.com",
   "license": "ISC",
   "dependencies": {
+    "gap-front-routing": "^1.0.5",
     "gap-front-web": "^1.2.11"
   },
   "scripts": {

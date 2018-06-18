@@ -1,6 +1,5 @@
-import {oneElem} from 'gap-front-web';
-import {TopbarView} from './view/TopbarView';
-import {SidebarView} from './view/SidebarView';
+import {TopbarView} from './TopbarView';
+import {SidebarView} from './SidebarView';
 
 export class CompanyLayout {
     constructor(data = {}) {

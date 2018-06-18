@@ -1,4 +1,4 @@
-import {isBelong} from '../lib/isBelong';
+import {isBelong} from './fun/isBelong';
 
 export class TopbarView {
     constructor(data) {

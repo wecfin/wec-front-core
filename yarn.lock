@@ -6,12 +6,9 @@ gap-front-event@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/gap-front-event/-/gap-front-event-2.0.0.tgz#1afd71f5bbb0d94a4efd350424a708cd8b7b4f52"
 
-gap-front-view@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/gap-front-view/-/gap-front-view-2.2.0.tgz#7995f280669e2e15e94ad93de2aed8911491b5fd"
-  dependencies:
-    gap-front-event "^2.0.0"
-    gap-front-web "^1.2.11"
+gap-front-routing@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/gap-front-routing/-/gap-front-routing-1.0.5.tgz#cfe01bee32ce2791af21b0467070b2884ce4fb18"
 
 gap-front-web@^1.2.11:
   version "1.2.11"

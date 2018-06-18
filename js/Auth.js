@@ -1,12 +1,28 @@
 export class Auth {
-    constructor(setting, appManager, cache, apiRequest) {
+    constructor(setting, cache, apiRequest, appManager) {
         this.setting = setting;
         this.appManager = appManager;
         this.cache = cache;
         this.apiRequest = apiRequest;
         this.idToken = null;
 
+        this.observers = [];
+
         this.idTokenCacheKey = 'product-id-token';
+        this.accessRoute = 'oauth2Access';
+    }
+
+    isLogined() {
+        return (this.idToken) ? true : false;
+    }
+
+    async logout() {
+        this.idToken = null;
+        await this.removeIdToken();
+    }
+
+    attach(observer) {
+        this.observers.push(observer);
     }
 
     getCacheKey(appCode) {
@@ -18,7 +34,7 @@ export class Auth {
 
         const accessUrl = await this.appManager.fetchApiUrl(
             appCode,
-            'oauth2access'
+            this.accessRoute
         );
         const accessToken = await this.apiRequest.postJson(
             accessUrl,
@@ -55,6 +71,10 @@ export class Auth {
         return this.idToken;
     }
 
+    async removeIdToken() {
+        await this.cache.remove(this.idTokenCacheKey);
+    }
+
     async setAccessToken(appCode, accessToken) {
         const cacheKey = this.getCacheKey(appCode);
         await this.cache.set(cacheKey, accessToken);
@@ -66,13 +86,13 @@ export class Auth {
         if (cachedAccessToken) {
             return cachedAccessToken;
         }
-        const idToken = this.getIdToken();
+        const idToken = await this.getIdToken();
         if (!idToken) {
             throw new Error('not-login');
         }
         const accessUrl = await this.appManager.fetchApiUrl(
             appCode,
-            'oauth2access'
+            this.accessRoute
         );
 
         const accessToken = await this.apiRequest.postJson(
