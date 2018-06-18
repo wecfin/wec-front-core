@@ -5,11 +5,16 @@ export class AppManager {
         this.cache = cache;
         this.apiRequest = apiRequest;
 
+        this.appSettings = {};
         this.cachedAppCodes = [];
     }
 
     getCacheKey(appCode) {
         return 'app:' + appCode;
+    }
+
+    getAppSetting(appCode) {
+        return this.appSettings[appCode];
     }
 
     async fetchApiUrl(appCode, api) {
@@ -18,9 +23,14 @@ export class AppManager {
     }
 
     async fetchAppSetting(appCode) {
+        if (this.appSettings[appCode]) {
+            return this.appSettings[appCode];
+        }
+
         const cacheKey = this.getCacheKey(appCode);
         const cachedAppSetting = await this.cache.get(cacheKey);
         if (cachedAppSetting) {
+            this.appSettings[appCode] = cachedAppSetting;
             return cachedAppSetting;
         }
 
@@ -36,6 +46,7 @@ export class AppManager {
         }
         await this.cache.set(cacheKey, remoteAppSetting);
         this.cachedAppCodes.push(appCode);
+        this.appSettings[appCode] = remoteAppSetting;
         return remoteAppSetting;
     }
 

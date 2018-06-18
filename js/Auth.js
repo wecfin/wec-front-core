@@ -29,7 +29,7 @@ export class Auth {
         return 'access-token:' + appCode;
     }
 
-    async accessByCode(code, state) {
+    async accessByCode(code) {
         const appCode = this.appManager.mainAppCode;
 
         const accessUrl = await this.appManager.fetchApiUrl(
@@ -39,10 +39,9 @@ export class Auth {
         const accessToken = await this.apiRequest.postJson(
             accessUrl,
             {
-                appId: this.setting.client.appId,
+                appId: this.setting.oauth2.appId,
                 grantType: 'authCode',
-                code: code,
-                state: state
+                code: code
             }
         );
 
@@ -55,6 +54,7 @@ export class Auth {
             this.getCacheKey(appCode),
             accessToken
         );
+        return accessToken;
     }
 
     async setIdToken(idToken) {
