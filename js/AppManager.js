@@ -40,8 +40,6 @@ export class AppManager {
     }
 
     generateUrl(appSetting, api) {
-        console.log(appSetting);
-
         const route = appSetting.route[api];
         if (!route) {
             throw new Error('cannot find api: ' + api);

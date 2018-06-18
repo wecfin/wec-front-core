@@ -9,3 +9,5 @@ export {WebRouter} from './js/web/WebRouter';
 export {WebHandler} from './js/web/WebHandler';
 
 export {deepMerge} from './js/fun/deepMerge';
+export {handler} from './js/handler';
+export {urlParser} from './js/web/lib/urlParser';

@@ -7,14 +7,13 @@ export class WebApiRequest {
     }
 
     getCallRequest() {
-        this._callRequest = this._callRequest || new Request();
-        this._callRequest.addHeader('Accept', 'application/json');
-        return this._callRequest;
+        const request = new Request();
+        request.addHeader('Accept', 'application/json');
+        return request;
     }
 
     getPostRequest() {
-        this._postRequest = this._postRequest || new Request();
-        return this._postRequest;
+        return new Request();
     }
 
     async call(accessToken, url, params) {
