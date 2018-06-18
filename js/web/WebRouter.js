@@ -98,6 +98,8 @@ export class WebRouter {
         if (name === this.preName) {
             this.go(-1);
         }
+
+        this.updateRoute(name, params, query);
         this.dispatch(route);
     }
 
@@ -142,6 +144,18 @@ export class WebRouter {
     }
 
     go(n) {
+        if (-1 == n) {
+            this.currentName = this.preName;
+            this.currentParams = this.preParams;
+            this.currentQuery = this.preQuery;
+        }
+
+        if (parseInt(n) < -1) {
+            this.currentName = this.preName = '';
+            this.currentParams = this.preParams = '';
+            this.currentQuery = this.preQuery = '';
+        }
+
         this.browser.go(n);
     }
 }
