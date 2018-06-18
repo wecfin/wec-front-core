@@ -18,16 +18,16 @@ export class SidebarView {
         this.regEvent();
     }
 
-    renderMenu(apps, handler) {
+    renderMenu(apps, navItems) {
         const menuContainer = this.ctn.oneElem('.wec-sidebar-menu');
         menuContainer.html``;
         for (let key in apps) {
-            const item = this.createMenuItem(apps[key], handler);
+            const item = this.createMenuItem(apps[key], navItems);
             menuContainer.appendChild(item);
         }
     }
 
-    createMenuItem(app, handler) {
+    createMenuItem(app, navItems) {
         let appName = app.appName;
         let isCurrentApp = this.data.currentAppCode == app.appCode;
         //let url = '//' + app.baseUrl + this.data.basePath + '/c/' + this.routerParams.companyCode + '?idToken=' + this.data.idToken || '';
@@ -44,7 +44,7 @@ export class SidebarView {
         `;
         if (isCurrentApp) {
             let submenuContainer = li.oneElem('ul');
-            this.createSubmenuItem(submenuContainer, handler);
+            this.createSubmenuItem(submenuContainer, navItems);
             li.on('click', () => li.toggleClass('menu-expanded'));
         }
 
@@ -61,28 +61,24 @@ export class SidebarView {
         return '//' + app.baseUrl + basePath + '/c/' + companyCode;
     }
 
-    async createSubmenuItem(container, handler) {
+    createSubmenuItem(container, navItems) {
         container.html``;
-        try {
-            let submenuObjs = await handler();
-            submenuObjs.forEach(obj => {
-                let li = document.createElement('li');
-                li.addClass(`wec-submenu-item submenu-${obj.name} ${(obj.name === this.selectedSubmenu) ? 'active' : ''}`);
-                li.html`<a href="javascript:;">${obj.name}</a>`;
 
-                let anchor = li.oneElem('a');
-                anchor.on('click', e => {
-                    e.stopPropagation();
-                    this.deActive('.wec-submenu-item');
-                    anchor.parentElement.addClass('active');
-                    this.data.router.navigate(obj.route, this.routerParams);
-                })
+        navItems.forEach(obj => {
+            let li = document.createElement('li');
+            li.addClass(`wec-submenu-item submenu-${obj.name} ${(obj.name === this.selectedSubmenu) ? 'active' : ''}`);
+            li.html`<a href="javascript:;">${obj.name}</a>`;
 
-                container.appendChild(li);
-            })
-        } catch (e) {
-            throw new Error(e);
-        }
+            let anchor = li.oneElem('a');
+            anchor.on('click', e => {
+                e.stopPropagation();
+                this.deActive('.wec-submenu-item');
+                anchor.parentElement.addClass('active');
+                this.data.router.navigate(obj.route, this.routerParams);
+            });
+
+            container.appendChild(li);
+        });
     }
 
     deActive(selector) {
@@ -109,7 +105,7 @@ export class SidebarView {
 
     selectSubmenu(item) {
         if (this.selectedSubmenu == item) {
-          return;
+            return;
         }
 
         this.deActive('.wec-submenu-item');
