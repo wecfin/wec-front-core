@@ -5,6 +5,7 @@ export class SidebarView {
         this.data = data;
         this.selectedMenu = {};
         this.routerParams = {};
+        this.webHandler = this.data.webHandler;
 
         this.ctn = document.createElement('div');
         this.ctn.addClass('wec-sidebar');
@@ -21,7 +22,7 @@ export class SidebarView {
         const menuContainer = this.ctn.oneElem('.wec-sidebar-menu');
         menuContainer.html``;
         for (let key in apps) {
-            let item = this.createMenuItem(apps[key], handler);
+            const item = this.createMenuItem(apps[key], handler);
             menuContainer.appendChild(item);
         }
     }
@@ -29,7 +30,9 @@ export class SidebarView {
     createMenuItem(app, handler) {
         let appName = app.appName;
         let isCurrentApp = this.data.currentAppCode == app.appCode;
-        let url = '//' + app.baseUrl + this.data.basePath + '/c/' + this.routerParams.companyCode + '?idToken=' + this.data.idToken || '';
+        //let url = '//' + app.baseUrl + this.data.basePath + '/c/' + this.routerParams.companyCode + '?idToken=' + this.data.idToken || '';
+        const url = this.getFrontUrl(app, this.data.basePath, this.routerParams.companyCode);
+
         let li = document.createElement('li');
         li.addClass(`wec-menu-item ${isCurrentApp ? 'active menu-expanded' : ''}`);
         li.html`
@@ -46,6 +49,16 @@ export class SidebarView {
         }
 
         return li;
+    }
+
+    getFrontUrl(app, basePath, companyCode) {
+        const localAppSetting = this.webHandler.setting.app[app.appCode];
+        const frontSetting = localAppSetting && localAppSetting.site && localAppSetting.site.front;
+        if (frontSetting && frontSetting.baseUrl) {
+            return '//' + frontSetting.baseUrl + '/c/' + companyCode;
+        }
+
+        return '//' + app.baseUrl + basePath + '/c/' + companyCode;
     }
 
     async createSubmenuItem(container, handler) {

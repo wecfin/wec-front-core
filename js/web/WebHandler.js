@@ -24,6 +24,10 @@ export class WebHandler {
     }
 
     // async
+    //
+    async fetchAppSetting(appCode) {
+        return this.core.appManager.fetchAppSetting(appCode);
+    }
 
     async call(appCode, api, params) {
         return await this.core.call(appCode, api, params);
