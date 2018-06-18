@@ -6,12 +6,24 @@ export class WebApiRequest {
         this.request.addHeader('Accept', 'application/json');
     }
 
+    getCallRequest() {
+        this._callRequest = this._callRequest || new Request();
+        this._callRequest.addHeader('Accept', 'application/json');
+        return this._callRequest;
+    }
+
+    getPostRequest() {
+        this._postRequest = this._postRequest || new Request();
+        return this._postRequest;
+    }
+
     async call(accessToken, url, params) {
-        this.request.addHeader('Authorization', 'Bearer ' + accessToken.token);
-        return await this.postJson(url, params);
+        const request = this.getCallRequest();
+        request.addHeader('Authorization', 'Bearer ' + accessToken.token);
+        return await request.postJson(url, params);
     }
 
     async postJson(url, params) {
-        return await this.request.postJson(url, params);
+        return await this.getPostRequest().postJson(url, params);
     }
 }

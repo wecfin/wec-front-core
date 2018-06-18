@@ -23,6 +23,10 @@ export class WebCache {
         );
     }
 
+    async clear() {
+        window.sessionStorage.clear();
+    }
+
     getCacheKey(key) {
         return prefix + key;
     }

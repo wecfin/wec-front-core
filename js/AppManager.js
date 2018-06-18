@@ -4,6 +4,8 @@ export class AppManager {
         this.setting = setting;
         this.cache = cache;
         this.apiRequest = apiRequest;
+
+        this.cachedAppCodes = [];
     }
 
     getCacheKey(appCode) {
@@ -33,6 +35,7 @@ export class AppManager {
             throw new Error('cannot find app: ' + appCode);
         }
         await this.cache.set(cacheKey, remoteAppSetting);
+        this.cachedAppCodes.push(appCode);
         return remoteAppSetting;
     }
 

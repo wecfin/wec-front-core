@@ -18,7 +18,7 @@ export class Auth {
 
     async logout() {
         this.idToken = null;
-        await this.removeIdToken();
+        await this.cache.clear();
     }
 
     attach(observer) {
@@ -71,7 +71,7 @@ export class Auth {
         return this.idToken;
     }
 
-    async removeIdToken() {
+    async clearIdToken() {
         await this.cache.remove(this.idTokenCacheKey);
     }
 
@@ -95,15 +95,30 @@ export class Auth {
             this.accessRoute
         );
 
+        const currentAppSetting = await this.appManager.fetchAppSetting(
+            this.setting.currentAppCode
+        );
+
         const accessToken = await this.apiRequest.postJson(
             accessUrl,
             {
-                appId: this.setting.client.appId,
+                appId: currentAppSetting.appId,
                 grantType: 'openId',
                 idToken: idToken
             }
         );
 
         await this.cache.set(cacheKey, accessToken);
+        return accessToken;
+    }
+
+    async removeAccessToken(appCode) {
+        await this.cache.remove(this.getCacheKey(appCode));
+    }
+
+    async clearAccessTokens() {
+        for (const appCode of this.appManager.cachedAppCodes) {
+            await this.removeAccessToken(appCode);
+        }
     }
 }
