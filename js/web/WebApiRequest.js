@@ -9,11 +9,14 @@ export class WebApiRequest {
     getCallRequest() {
         const request = new Request();
         request.addHeader('Accept', 'application/json');
+        request.withCredentials = true;
         return request;
     }
 
     getPostRequest() {
-        return new Request();
+        const request  = new Request();
+        request.withCredentials = true;
+        return request;
     }
 
     async call(accessToken, url, params) {
