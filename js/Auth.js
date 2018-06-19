@@ -80,10 +80,29 @@ export class Auth {
         await this.cache.set(cacheKey, accessToken);
     }
 
+    isExpiredAccessToken(accessToken) {
+        const localExpired = parseInt(accessToken.localExpired);
+        if (isNaN(localExpired)) {
+            return true;
+        }
+
+        return ((new Date()).getTime() > localExpired);
+    }
+
+    getLocalExpired(accessToken) {
+        const remoteCreated = (new Date(accessToken.created)).getTime();
+        const localCreated = (new Date()).getTime();
+
+        const remoteExpired = (new Date(accessToken.expired)).getTime();
+        const localOffset = 300000; // 5 minute
+        const localExpired = remoteExpired + (localCreated - remoteCreated)  - localOffset;
+        return localExpired;
+    }
+
     async fetchAccessToken(appCode) {
         const cacheKey = this.getCacheKey(appCode);
         const cachedAccessToken = await this.cache.get(cacheKey);
-        if (cachedAccessToken) {
+        if (cachedAccessToken && !this.isExpiredAccessToken(cachedAccessToken)) {
             return cachedAccessToken;
         }
         const idToken = await this.getIdToken();
@@ -107,6 +126,8 @@ export class Auth {
                 idToken: idToken
             }
         );
+
+        accessToken.localExpired = this.getLocalExpired(accessToken);
 
         await this.cache.set(cacheKey, accessToken);
         return accessToken;
