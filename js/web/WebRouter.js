@@ -8,7 +8,10 @@ export class WebRouter {
         this.browser = new WebBrowser();
 
         this.browser.setBasePath(basePath);
-        this.browser.onPopstate(() => this.refresh());
+        this.browser.onPopstate(() => {
+            this.clearRouteState();
+            this.refresh();
+        });
     }
 
     setBasePath(path) {
@@ -143,18 +146,14 @@ export class WebRouter {
         return false;
     }
 
-    go(n) {
-        if (-1 == n) {
-            this.currentName = this.preName;
-            this.currentParams = this.preParams;
-            this.currentQuery = this.preQuery;
-        }
+    clearRouteState() {
+        this.currentName = this.preName = '';
+        this.currentParams = this.preParams = '';
+        this.currentQuery = this.preQuery = '';
+    }
 
-        if (parseInt(n) < -1) {
-            this.currentName = this.preName = '';
-            this.currentParams = this.preParams = '';
-            this.currentQuery = this.preQuery = '';
-        }
+    go(n) {
+        this.clearRouteState();
 
         this.browser.go(n);
     }
