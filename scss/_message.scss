@@ -1,0 +1,64 @@
+$message-error-color:  #f56c6c;
+$message-error-bgc: #ffdada;
+$message-success-color:  #9ed085;
+$message-success-bgc: #f0f9eb;
+$message-warning-color:  #e1d435;
+$message-warning-bgc: #fff5e7;
+$message-info-color:  #1779ba;
+$message-info-bgc: #ebeef5;
+
+$message-shadow-color: rgba(0, 0, 0, .1);
+
+.wec-message {
+    align-items: center;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px 0 $message-shadow-color;
+    box-sizing: border-box;
+    display: flex;
+    left: 50%;
+    margin: 0 auto;
+    min-width: 300px;
+    overflow: hidden;
+    padding: .5rem 1rem;
+    position: fixed;
+    transform: translateX(-50%);
+    transition: opacity .5s;
+
+    .icon-close {
+        color: #999;
+    }
+
+    .message-icon {
+        font-size: 1.25rem;
+        margin-right: .5rem;
+    }
+
+    .message-detail {
+        flex: 1;
+        font-size: 1rem;
+    }
+
+    &.fade {
+        opacity: 0;
+    }
+
+    &.error {
+        background-color: $message-error-bgc;
+        color: $message-error-color;
+    }
+
+    &.success {
+        background-color: $message-success-bgc;
+        color: $message-success-color;
+    }
+
+    &.warning {
+        background-color: $message-warning-bgc;
+        color: $message-warning-color;
+    }
+
+    &.info {
+        background-color: $message-info-bgc;
+        color: $message-info-color;
+    }
+}

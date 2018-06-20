@@ -1,0 +1,64 @@
+$notify-error-color:  #f56c6c;
+$notify-success-color:  #b4eeb4;
+$notify-warning-color:  #eee685;
+$notify-info-color:  #1779ba;
+$notify-shadow-color: rgba(0, 0, 0, .1);
+
+.wec-notification {
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px 0 $notify-shadow-color;
+    box-sizing: border-box;
+    display: flex;
+    overflow: hidden;
+    padding: 1rem;
+    position: fixed;
+    transition: opacity .3s, transform .3s, top .4s;
+    width: 320px;
+
+    .icon-close {
+        color: #4a4a4a;
+        position: absolute;
+        right: .5rem;
+        top: .5rem;
+    }
+
+    .notification-icon {
+        font-size: 1.5rem;
+        margin-right: .5rem;
+    }
+
+    .notification-title {
+        font-size: 1.25rem;
+    }
+
+    &.error {
+
+        .notification-icon {
+            color: $notify-error-color;
+        }
+    }
+
+    &.success {
+
+        .notification-icon {
+            color: $notify-success-color;
+        }
+    }
+
+    &.warning {
+
+        .notification-icon {
+            color: $notify-warning-color;
+        }
+    }
+
+    &.info {
+
+        .notification-icon {
+            color: $notify-info-color;
+        }
+    }
+}
