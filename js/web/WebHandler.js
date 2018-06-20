@@ -43,7 +43,7 @@ export class WebHandler {
         window.location.href = targetUrl;
     }
 
-    async accessByCode(code, state) {
+    assertState(state) {
         const cachedState = window.sessionStorage.getItem(
             this.stateCacheKey
         );
@@ -51,10 +51,13 @@ export class WebHandler {
         if (state !== cachedState) {
             throw new Error('state not match');
         }
-        return await this.core.auth.accessByCode(code);
+    }
+    // async
+    async accessByCode(code, state, companyCode = '') {
+        this.assertState(state);
+        return await this.core.auth.accessByCode(code, companyCode);
     }
 
-    // async
     async fetchAppSetting(appCode) {
         return this.core.appManager.fetchAppSetting(appCode);
     }
