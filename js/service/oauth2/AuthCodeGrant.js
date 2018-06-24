@@ -11,14 +11,14 @@ export class AuthCodeGrant {
         this.stateCacheKey = 'state';
     }
 
-    async asGetAuthUrl() {
+    async asGetAuthUrl(opts) {
         const state = btoa(Math.random()).substr(5, 12);
         const targetUrl = this.authUrl + '?' + this.queryStringify({
             state: state,
             responseType: 'code',
             appId: this.appId,
             scope: 'openId',
-            redirectUrl: this.redirectUrl
+            redirectUrl: opts.redirectUrl || this.redirectUrl
         });
 
         await this.cache.set(this.stateCacheKey, state);

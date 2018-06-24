@@ -21,6 +21,9 @@ export class WecCore {
     async call(appCode, api, params) {
         const url = await this.appService.asGetApiUrl(appCode, api);
         const accessToken = await this.accessService.asGetAccessToken(appCode);
+        if (!accessToken) {
+            throw new Error('cannot get accessToken:' + url);
+        }
         return await this.apiRequest.call(accessToken, url, params);
     }
 
@@ -29,8 +32,8 @@ export class WecCore {
         return await this.apiRequest.postJson(url, params);
     }
 
-    async asGetAuthUrl() {
-        return this.getAuthCodeGrant.asGetAuthUrl();
+    async asGetAuthUrl(opts) {
+        return this.getAuthCodeGrant().asGetAuthUrl(opts);
     }
 
     getCurrentCompanyCode() {
@@ -45,12 +48,18 @@ export class WecCore {
         return this.setting.currentAppCode;
     }
 
-    isCurrentCompany(companyCode) {
+    async asEnterCompany(companyCode) {
         if (!companyCode) {
             return false;
         }
+        this.currentCompanyCode = companyCode;
+        this.accessService.currentCompanyCode = companyCode;
 
-        return (this.currentCompanyCode === companyCode);
+        const cached = await this.idTokenService.asGetIdToken(
+            companyCode
+        );
+
+        return cached ? true : false;
     }
 
     async asIsLogined() {
@@ -60,14 +69,14 @@ export class WecCore {
         return accessToken ? true : false;
     }
 
-    async asEnterWec(accessToken) {
+    async asAccessWec(accessToken) {
         await this.accessService.asSetAccessToken(
             this.getMainAppCode(),
             accessToken
         );
     }
 
-    async asEnterCompany(companyCode) {
+    async asTokenCompany(companyCode) {
         const res = await this.call(
             this.getMainAppCode(),
             'idToken',
@@ -76,8 +85,8 @@ export class WecCore {
         await this.idTokenService.asSetIdToken(companyCode, res.idToken);
     }
 
-    async asEnterCompanyByCode(companyCode, code, state) {
-        const accessToken = await this.getAuthCodeGrant.asGetAccessToken(
+    async asTokenCompanyByCode(companyCode, code, state) {
+        const accessToken = await this.getAuthCodeGrant().asGetAccessToken(
             code,
             state,
             {companyCode}
@@ -125,7 +134,7 @@ export class WecCore {
 
     // ---
     getAuthCodeGrant() {
-        this._authCodeGrant = this._authCodeGrant || new AuthCodeGrant(this.setting.oauth2);
+        this._authCodeGrant = this._authCodeGrant || new AuthCodeGrant(this.setting.oauth2, this.apiRequest, this.cache);
         return this._authCodeGrant;
     }
 

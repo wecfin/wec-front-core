@@ -8,8 +8,9 @@ export class AccessService {
         this.cache = cache;
         this.apiRequest = apiRequest;
 
-        this.idTokenService = new IdTokenService(setting, cache, apiRequest);
+        this.idTokenService = new IdTokenService(cache);
         this.store = new AccessStore(this.cache);
+        this.currentCompanyCode = '';
     }
 
     async asSetAccessToken(appCode, accessToken) {
@@ -22,13 +23,19 @@ export class AccessService {
             return cached;
         }
 
-        const idToken = await this.idTokenService.asGetCurrentIdToken();
+        if (!this.currentCompanyCode) {
+            return null;
+            //return new Error('no companyCode');
+        }
+        const idToken = await this.idTokenService.asGetIdToken(this.currentCompanyCode);
         if (!idToken) {
             return null;
+            //throw new Error('cannot get current idToken');
         }
 
         const accessToken = await this.getOpenIdGrant().asAccessToken(idToken);
         await this.asSetAccessToken(appCode, accessToken);
+        return accessToken;
     }
 
     async asRemoveAccessToken(appCode) {
@@ -36,7 +43,7 @@ export class AccessService {
     }
 
     getOpenIdGrant() {
-        this._openIdGrant = this._openIdGrant || new OpenIdGrant(this.setting.oauth2);
+        this._openIdGrant = this._openIdGrant || new OpenIdGrant(this.setting.oauth2, this.apiRequest);
         return this._openIdGrant;
     }
 }
