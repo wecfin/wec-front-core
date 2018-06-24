@@ -1,37 +1,23 @@
-export class AppManager {
+import {AppSettingStore} from './store/AppSettingStore';
+
+export class AppService {
     constructor(setting, cache, apiRequest) {
-        this.mainAppCode = setting.mainAppCode;
         this.setting = setting;
         this.cache = cache;
         this.apiRequest = apiRequest;
 
-        this.appSettings = {};
-        this.cachedAppCodes = [];
+        this.store = new AppSettingStore(this.cache);
     }
 
-    getCacheKey(appCode) {
-        return 'app:' + appCode;
-    }
-
-    getAppSetting(appCode) {
-        return this.appSettings[appCode];
-    }
-
-    async fetchApiUrl(appCode, api) {
-        const appSetting = await this.fetchAppSetting(appCode);
+    async asGetApiUrl(appCode, api) {
+        const appSetting = await this.asGetAppSetting(appCode);
         return this.generateUrl(appSetting, api);
     }
 
-    async fetchAppSetting(appCode) {
-        if (this.appSettings[appCode]) {
-            return this.appSettings[appCode];
-        }
-
-        const cacheKey = this.getCacheKey(appCode);
-        const cachedAppSetting = await this.cache.get(cacheKey);
-        if (cachedAppSetting) {
-            this.appSettings[appCode] = cachedAppSetting;
-            return cachedAppSetting;
+    async asGetAppSetting(appCode) {
+        const cached = await this.store.asGet(appCode);
+        if (cached) {
+            return cached;
         }
 
         const appSetting = this.setting.app[appCode];
@@ -44,9 +30,7 @@ export class AppManager {
         if (!remoteAppSetting) {
             throw new Error('cannot find app: ' + appCode);
         }
-        await this.cache.set(cacheKey, remoteAppSetting);
-        this.cachedAppCodes.push(appCode);
-        this.appSettings[appCode] = remoteAppSetting;
+        await this.store.asSet(appCode, remoteAppSetting);
         return remoteAppSetting;
     }
 
