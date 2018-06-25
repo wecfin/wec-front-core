@@ -1,38 +1,25 @@
-## Usage
+# wec-front-core
 
-```javascript
-import {CompanyLayout} from 'wec-front-core';
+## api
 
-const layout = new CompanyLayout();
-```
+WecCore
+- constructor(setting, cache, apiRequest)
+- sync
+    - getCurrentCompanyCode()
+    - getMainAppCode()
+    - getCurrentAppCode()
+- async
+    - call(appCode, api, params)
+    - post(appCode, pi, params)
+    - asGetAuthUrl(oauthOpts)
+    - asEnterCompany(companyCode)
+    - asIsLogined()
+    - asAccessWeb(accessToken)
+    - asTokenCompany(companyCode)
+    - asTokenCompanyByCode(companyCode, code, state)
+    - asGetAppSetting(appCode)
+    - asGetCurrentCompany()
+    - asLogout()
 
-### breadcrumb
 
-```javascript
-layout.setBreadcrumb([
-  {
-    title: 'HOME', href: '/c/wec'
-  },{
-    title: 'csOrder', href: '/c/wec/list-cs-order'
-  },{
-    title: [ordercode], href: ''
-  }
-])
-```
-
-### select menu
-
-```javascript
-layout.selectMenu({
-  app: 'order',
-  product: 'spu'
-})
-```
-
-### fill main area
-
-```javascript
-layout.mainHtml`
-  <div>your content here<div>
-`;
-```
+* All the async function prefix with 'as' except 'call' and 'post'
