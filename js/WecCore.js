@@ -101,6 +101,44 @@ export class WecCore {
         await this.appSetting.asGetAppSetting(appCode);
     }
 
+    async asGetCurrentUser() {
+        if (this.currentUser) {
+            return this.currentUser;
+        }
+
+        const cachedUser = await this.cache.get('user-info');
+        if (cachedUser) {
+            this.currentUser = cachedUser;
+            return cachedUser;
+        }
+
+        const currentUser = await this.call(this.getMainAppCode(), 'fetchCurrentUser');
+        this.cache.set('user-info', currentUser);
+        return currentUser;
+    }
+
+    async asGetCurrentEmployee() {
+        if (this.currentEmployee) {
+            return this.currentEmployee;
+        }
+
+        const cachedEmployee = await this.cache.get('employee-info');
+        if (cachedEmployee) {
+            this.currentEmployee = cachedEmployee;
+            return cachedEmployee;
+        }
+
+        const currentCompany = await this.asGetCurrentCompany();
+        const currentEmployee = await this.call(
+            this.getMainAppCode(),
+            'fetchCurrentEmployee',
+            {companyId: currentCompany.companyId}
+        );
+
+        this.cache.set('employee-info', currentEmployee);
+        return currentEmployee;
+    }
+
     async asGetCurrentCompany() {
         if (this.currentCompany) {
             return this.currentCompany;
@@ -117,11 +155,11 @@ export class WecCore {
             this.currentCompany = cachedCompany;
             return cachedCompany;
         }
-        
+
         const company = await this.call(
             this.getMainAppCode(),
             'fetchCompanyByCode',
-            {companyCode: this.getCurrentCompanyCode()}
+            {code: this.getCurrentCompanyCode()}
         );
         await this.cache.set(cacheKey, company);
         this.currentCompany = cachedCompany;
