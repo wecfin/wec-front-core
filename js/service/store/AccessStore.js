@@ -47,4 +47,3 @@ export class AccessStore {
         return localExpired;
     }
 }
-

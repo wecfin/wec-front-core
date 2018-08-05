@@ -14,11 +14,16 @@ export class AccessService {
     }
 
     async asSetAccessToken(appCode, accessToken) {
+        if (this.currentCompanyCode) {
+            await this.store.asSet(`${appCode}-` + this.currentCompanyCode, accessToken);
+            return;
+        }
+
         await this.store.asSet(appCode, accessToken);
     }
 
     async asGetAccessToken(appCode) {
-        const cached = await this.store.asGet(appCode);
+        let cached = await this.store.asGet(appCode);
         if (cached) {
             return cached;
         }
@@ -27,6 +32,12 @@ export class AccessService {
             return null;
             //return new Error('no companyCode');
         }
+
+        cached = await this.store.asGet(`${appCode}-` + this.currentCompanyCode);
+        if (cached) {
+            return cached;
+        }
+
         const idToken = await this.idTokenService.asGetIdToken(this.currentCompanyCode);
         if (!idToken) {
             return null;
