@@ -15,7 +15,6 @@ export class WecCore {
         this.idTokenService = new IdTokenService(cache);
 
         this.currentCompanyCode = '';
-        this.currentCompany = null;
     }
 
     async call(appCode, api, params) {
@@ -102,13 +101,9 @@ export class WecCore {
     }
 
     async asGetCurrentUser() {
-        if (this.currentUser) {
-            return this.currentUser;
-        }
 
         const cachedUser = await this.cache.get('user-info');
         if (cachedUser) {
-            this.currentUser = cachedUser;
             return cachedUser;
         }
 
@@ -118,13 +113,9 @@ export class WecCore {
     }
 
     async asGetCurrentEmployee() {
-        if (this.currentEmployee) {
-            return this.currentEmployee;
-        }
 
         const cachedEmployee = await this.cache.get('employee-info');
         if (cachedEmployee) {
-            this.currentEmployee = cachedEmployee;
             return cachedEmployee;
         }
 
@@ -140,10 +131,6 @@ export class WecCore {
     }
 
     async asGetCurrentCompany() {
-        if (this.currentCompany) {
-            return this.currentCompany;
-        }
-
         const companyCode = this.getCurrentCompanyCode();
         if (!companyCode) {
             return null;
@@ -152,7 +139,6 @@ export class WecCore {
         const cacheKey = this.getCompanyCacheKey(companyCode);
         const cachedCompany = await this.cache.get(cacheKey);
         if (cachedCompany) {
-            this.currentCompany = cachedCompany;
             return cachedCompany;
         }
 
@@ -162,7 +148,6 @@ export class WecCore {
             {code: this.getCurrentCompanyCode()}
         );
         await this.cache.set(cacheKey, company);
-        this.currentCompany = cachedCompany;
         return company;
     }
 
@@ -184,6 +169,5 @@ export class WecCore {
         const cacheKey = this.getCompanyCacheKey(this.getCurrentCompanyCode());
         this.cache.remove(cacheKey);
         this.currentCompanyCode = null;
-        this.currentCompany = null;
     }
 }
